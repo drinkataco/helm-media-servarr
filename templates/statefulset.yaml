@@ -1,6 +1,6 @@
-{{- define "media-servarr-base.deployment" -}}
+{{- define "media-servarr-base.statefulset" -}}
 {{- $kind := default "Deployment" .Values.deployment.kind -}}
-{{- if eq $kind "Deployment" -}}
+{{- if eq $kind "StatefulSet" -}}
 {{- $context := . }}
 {{/* Set application config object to map */}}
 {{- $config := .Values.application.config }}
@@ -10,18 +10,19 @@
 {{- end -}}
 
 apiVersion: 'apps/v1'
-kind: 'Deployment'
+kind: 'StatefulSet'
 metadata:
   name: '{{ include "media-servarr-base.fullname" . }}'
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "media-servarr-base.labels" . | nindent 4 }}
 spec:
+  serviceName: '{{ include "media-servarr-base.fullname" . }}-headless'
   selector:
     matchLabels:
       {{- include "media-servarr-base.selectorLabels" . | nindent 6 }}
-  strategy:
-    {{- with (default (dict "type" "Recreate") .Values.deployment.strategy) }}
+  updateStrategy:
+    {{- with (default (dict "type" "OnDelete") .Values.deployment.updateStrategy) }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
   template:

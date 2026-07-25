@@ -42,7 +42,18 @@ application:
 # This is to set up and define the application deployment
 #
 deployment:
+  # Workload kind. Deployment (default) is the historical choice; StatefulSet
+  # is a semantically correct alternative for single-instance stateful apps
+  # (the arr apps, jellyfin, sabnzbd, transmission, etc.). Switching an
+  # existing install is a manual `helm delete` + reinstall — Kubernetes does
+  # not allow in-place mutation of a resource's kind.
+  kind: 'Deployment'   # 'Deployment' | 'StatefulSet'
   strategy: {}
+  # Only consulted when kind: StatefulSet. `OnDelete` mirrors the semantics
+  # of Deployment + Recreate for 1-replica apps: the old pod terminates
+  # before the new one starts, so RWO PVCs don't Multi-Attach.
+  updateStrategy:
+    type: 'OnDelete'
   podAnnotations: {}
   podLabels: {}
 

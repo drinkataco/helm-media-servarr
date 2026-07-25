@@ -52,9 +52,22 @@
     "deployment": {
       "type": "object",
       "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["Deployment", "StatefulSet"],
+          "description": "Workload kind. Defaults to `Deployment`. Set to `StatefulSet` for single-instance stateful apps (arr apps, jellyfin, etc.). Switching an existing install is a manual `helm delete` + reinstall."
+        },
         "strategy": {
           "type": ["object", "null"],
-          "description": "Deployment strategy. Defaults to `{type: Recreate}` when empty."
+          "description": "Deployment strategy. Defaults to `{type: Recreate}` when empty. Ignored when `kind: StatefulSet`."
+        },
+        "updateStrategy": {
+          "type": ["object", "null"],
+          "description": "StatefulSet update strategy. Defaults to `{type: OnDelete}` (mirrors Deployment+Recreate for 1-replica). Ignored when `kind: Deployment`.",
+          "properties": {
+            "type": { "type": "string", "enum": ["OnDelete", "RollingUpdate"] },
+            "rollingUpdate": { "type": ["object", "null"] }
+          }
         },
         "podAnnotations": { "type": ["object", "null"] },
         "podLabels": { "type": ["object", "null"] },
