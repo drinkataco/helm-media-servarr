@@ -7,12 +7,12 @@ keywords:
   - 'homarr'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 0.48.0
+version: 0.47.0
 appVersion: v1.72.0
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/homarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.16.0
+    version: 0.15.1
     repository: "file://../.."
 maintainers:
   - name: 'media-servarr'
