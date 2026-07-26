@@ -10,8 +10,8 @@ keywords:
   - 'profilarr'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 1.0.0
-appVersion: v2.0.9
+version: 1.1.0
+appVersion: v1.1.5
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/profilarr/icon.png'
 maintainers:
   - name: 'media-servarr'
