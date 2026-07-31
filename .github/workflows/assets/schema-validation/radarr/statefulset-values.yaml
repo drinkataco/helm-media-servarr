@@ -1,0 +1,6 @@
+# Renders radarr as a StatefulSet + headless service (issue #136 opt-in path).
+# kubeconform must accept both the StatefulSet manifest and the ClusterIP:None
+# headless service.
+
+deployment:
+  kind: 'StatefulSet'
