@@ -10,9 +10,9 @@ keywords:
   - 'profilarr'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 1.1.0
+version: 1.1.1
 appVersion: v1.1.5
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/profilarr/icon.png'
+icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/profilarr/icon.png?raw=true'
 maintainers:
   - name: 'media-servarr'
     email: 'git@jo.shw.al'
@@ -23,5 +23,5 @@ sources:
   - 'https://github.com/drinkataco/media-servarr/tree/main/charts/profilarr'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.15.1
+    version: 0.15.2
     repository: "file://../.."
