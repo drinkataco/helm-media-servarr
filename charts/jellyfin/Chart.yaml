@@ -15,12 +15,12 @@ keywords:
   - 'jellyfin'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 0.14.1
+version: 0.14.2
 appVersion: 10.11.11
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/jellyfin/icon.png'
+icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/jellyfin/icon.png?raw=true'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.15.1
+    version: 0.15.2
     repository: "file://../.."
 maintainers:
   - name: 'media-servarr'
