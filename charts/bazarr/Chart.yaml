@@ -15,7 +15,7 @@ kubeVersion: ">=1.24.0-0"
 type: 'application'
 version: 0.15.1
 appVersion: 1.6.0
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/bazarr/icon.png'
+icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/bazarr/icon.png?raw=true'
 dependencies:
   - name: 'media-servarr-base'
     version: 0.15.1
