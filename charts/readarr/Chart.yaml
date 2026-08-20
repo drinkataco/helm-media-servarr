@@ -12,7 +12,7 @@ keywords:
   - 'readarr'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 0.15.1
+version: 0.16.0
 appVersion: 0.4.19-nightly
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/readarr/icon.png?raw=true'
 deprecated: true

@@ -11,7 +11,7 @@ keywords:
   - 'lidarr'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 1.5.1
+version: 1.6.0
 appVersion: 3.1.0
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png?raw=true'
 dependencies:
