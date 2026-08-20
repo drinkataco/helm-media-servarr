@@ -77,12 +77,17 @@ spec:
             - '-c'
             - |
               #!/bin/sh
-              # Inject secrets in config if set
+              # Inject secrets in config if set.
+              # Secret values are pre-escaped so sed metacharacters (&, /, \)
+              # in the replacement don't break the s/// command. See #343.
               {{- range $config }}
               {{- if gt (len (default list .secrets)) 0 }}
+              {{- range .secrets }}
+              {{ . }}_esc=$(printf '%s' "${{ . }}" | sed -e 's|[&/\]|\\&|g')
+              {{- end }}
               sed \
                 {{- range .secrets }}
-                -e "s/\${{ . }}/${{ . }}/g" \
+                -e "s/\${{ . }}/${{ . }}_esc/g" \
                 {{- end }}
                 '/config-map/{{ .filename }}' > \
                 '/config-processed/{{ .filename }}'
