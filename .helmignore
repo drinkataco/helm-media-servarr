@@ -8,3 +8,5 @@ scripts/
 LICENSE
 Makefile
 .cr-release-packages/
+pubkey.asc
+artifacthub-repo.yml
