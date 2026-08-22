@@ -2,3 +2,6 @@
 *.tgz
 *.lock
 dist/
+
+# Per-chart values.schema.json is synced from the root schema at package/lint time.
+charts/*/values.schema.json

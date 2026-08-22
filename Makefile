@@ -1,7 +1,8 @@
-.PHONY: all lint package index clean
+.PHONY: all lint package index clean sync-schema
 
 CHARTS_DIR ?= charts/
 DIST := dist/charts
+SCHEMA := values.schema.json
 
 # Default value for CHILD_CHARTS is set to a shell command that finds all directories in CHARTS_DIR
 # This can be overridden by passing CHILD_CHARTS="chart1 chart2" to the make command
@@ -12,6 +13,12 @@ HELM_REPO ?= https://media-servarr.shw.al/charts
 
 # Default target
 build: package pre-fetch index
+
+# Copy the root values.schema.json into each subchart so tooling (helm lint,
+# helm package, artifact hub) can find it alongside the chart's values.yaml.
+sync-schema:
+	@echo "Syncing $(SCHEMA) into each chart..."
+	$(foreach chart,$(CHARTS), cp $(SCHEMA) "$(CHARTS_DIR)$(chart)/$(SCHEMA)";)
 
 # Lint the Helm charts
 lint:
@@ -24,7 +31,7 @@ test:
 	@$(foreach chart,$(CHILD_CHARTS),helm test $(chart) &&) echo "Helm tests completed."
 
 # Package the Helm charts
-package:
+package: sync-schema
 	@echo "Packaging charts..."
 	$(foreach chart,$(CHARTS), helm package "$(CHARTS_DIR)$(chart)" --dependency-update --destination $(DIST);)
 

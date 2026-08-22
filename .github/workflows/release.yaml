@@ -37,6 +37,8 @@ jobs:
       - name: 'Prepare packaging'
         run: |
           #!/bin/sh
+          # Bundle values.schema.json into each chart before chart-releaser packages them
+          make sync-schema
           # Fetch current index.yaml
           CR_INDEX_DIR=.cr-index
           mkdir "$CR_INDEX_DIR"
