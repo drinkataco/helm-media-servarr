@@ -44,6 +44,15 @@ jobs:
           mkdir "$CR_INDEX_DIR"
           make pre-fetch DIST="$CR_INDEX_DIR"
 
+      - name: 'Import signing key'
+        # Decodes the base64-encoded GPG private key into a binary keyring that
+        # chart-releaser passes to `helm package --sign`. Writes the passphrase
+        # to a temp file so CR_PASSPHRASE_FILE can consume it non-interactively.
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 -d > /tmp/secring.gpg
+          printf '%s' "${{ secrets.GPG_PASSPHRASE }}" > /tmp/passphrase
+          chmod 600 /tmp/secring.gpg /tmp/passphrase
+
       - name: 'Run chart-releaser'
         uses: 'helm/chart-releaser-action@v1.7.0'
         with:
@@ -52,6 +61,10 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           CR_GENERATE_RELEASE_NOTES: true
           CR_SKIP_EXISTING: true
+          CR_SIGN: 'true'
+          CR_KEY: "${{ secrets.GPG_KEYNAME }}"
+          CR_KEYRING: '/tmp/secring.gpg'
+          CR_PASSPHRASE_FILE: '/tmp/passphrase'
 
       - name: 'Move to upload path'
         run: |
