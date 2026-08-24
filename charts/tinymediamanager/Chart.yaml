@@ -10,8 +10,8 @@ keywords:
   - 'tinymediamanager'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 1.6.1
-appVersion: 5.3.1
+version: 1.6.2
+appVersion: 5.3.2
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/tinymediamanager/icon.png?raw=true'
 maintainers:
   - name: 'media-servarr'
