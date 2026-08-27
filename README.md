@@ -99,3 +99,18 @@ application:
         <ApiKey>$apiKey</ApiKey>
       </Config>
 ```
+
+### Deployment vs StatefulSet
+
+Every chart defaults to running as a `Deployment` with the `Recreate` update strategy — the old pod terminates before the new one starts, so `ReadWriteOnce` config volumes don't hit `Multi-Attach` errors on upgrade. For single-replica apps this behaves identically to a StatefulSet with `OnDelete` at runtime.
+
+For a semantically correct fit with the stateful apps (arr apps, jellyfin, sabnzbd, transmission, profilarr, tinymediamanager, homarr), the base chart also supports rendering a `StatefulSet` plus a headless service. Opt in per install via values:
+
+```yaml
+deployment:
+  kind: 'StatefulSet'   # default: 'Deployment'
+  updateStrategy:
+    type: 'OnDelete'    # default when kind: StatefulSet
+```
+
+Flip only for fresh installs. Kubernetes doesn't allow in-place mutation of a resource's `kind`, so switching an existing install is a manual `helm delete <release>` followed by `helm install <release> ...` with the new values. PVCs survive the delete as long as you don't pass `--delete-persistent-volume-claims`, so data stays intact. `flaresolverr` is genuinely stateless and should stay a Deployment.
