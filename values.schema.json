@@ -128,7 +128,8 @@
         "nodeSelector": { "type": ["object", "null"] },
         "tolerations": { "type": ["array", "null"] },
         "affinity": { "type": ["object", "null"] },
-        "runtimeClassName": { "type": ["string", "null"] }
+        "runtimeClassName": { "type": ["string", "null"] },
+        "priorityClassName": { "type": ["string", "null"] }
       }
     },
 
