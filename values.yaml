@@ -124,6 +124,10 @@ deployment:
 
   runtimeClassName:
 
+  # PriorityClass for the pod.
+  # Must already exist in cluster.
+  priorityClassName:
+
 persistentVolumeClaims: {}
   # app-config:
   #   name: 'my-config-pvc' # optional, uses key name by default
