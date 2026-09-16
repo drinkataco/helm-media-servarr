@@ -49,6 +49,12 @@ deployment:
   podSecurityContext: {}
     # fsGroup: 2000
 
+  # Run the pod on the host network. Needed by apps that rely on multicast
+  # discovery (e.g. jellyfin DLNA/SSDP). When enabled, set dnsPolicy to
+  # 'ClusterFirstWithHostNet' to keep cluster DNS resolution.
+  # hostNetwork: false
+  # dnsPolicy: 'ClusterFirstWithHostNet'
+
   container:
     image:
       repository: 'nginx'
