@@ -216,6 +216,12 @@ spec:
         - name: 'config-map-processed'
           emptyDir: {}
         {{- end }}
+      {{- with .Values.deployment.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
+      {{- with .Values.deployment.dnsPolicy }}
+      dnsPolicy: '{{ . }}'
+      {{- end }}
       {{- with .Values.deployment.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
