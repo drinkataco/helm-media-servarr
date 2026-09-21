@@ -1,0 +1,29 @@
+{{- define "media-servarr-base.service-headless" -}}
+{{- $kind := default "Deployment" .Values.deployment.kind -}}
+{{- if eq $kind "StatefulSet" -}}
+{{- $context := . }}
+---
+
+apiVersion: 'v1'
+kind: 'Service'
+metadata:
+  name: '{{ include "media-servarr-base.fullname" . }}-headless'
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "media-servarr-base.labels" . | nindent 4 }}
+spec:
+  # Headless service — required by the StatefulSet for stable per-pod DNS.
+  # The regular ClusterIP service still fronts HTTP traffic.
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    {{- range .Values.deployment.container.ports }}
+    - port: {{ if .servicePort }}{{ .servicePort }}{{ else if .containerPort }}{{ .containerPort }}{{ else }}{{ $context.Values.application.port }}{{ end }}
+      targetPort: {{ if .targetPort }}{{ .targetPort }}{{ else if .containerPort }}{{ .containerPort }}{{ else }}{{ $context.Values.application.port }}{{ end }}
+      protocol: '{{ .protocol }}'
+      name: '{{ .name }}'
+    {{- end }}
+  selector:
+    {{- include "media-servarr-base.selectorLabels" . | nindent 4 }}
+{{- end }}
+{{- end }}
