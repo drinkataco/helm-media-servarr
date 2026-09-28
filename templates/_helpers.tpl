@@ -87,7 +87,9 @@ Use all default templates and logic
 */}}
 {{- define "media-servarr-base.template" -}}
 {{ include "media-servarr-base.deployment" . }}
+{{ include "media-servarr-base.statefulset" . }}
 {{ include "media-servarr-base.service" . }}
+{{ include "media-servarr-base.service-headless" . }}
 {{ include "media-servarr-base.configmap" . }}
 {{ include "media-servarr-base.secret" . }}
 {{ include "media-servarr-base.serviceaccount" . }}
