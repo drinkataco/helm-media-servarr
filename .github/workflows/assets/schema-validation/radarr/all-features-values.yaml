@@ -1,7 +1,8 @@
 # Exercises the optional feature branches of the base chart's templates:
 # metrics/ServiceMonitor, ingress with TLS, an external-secret ref, service
-# account creation, init containers, sidecars, and resource limits. A regression
-# in any of these would render invalid Kubernetes manifests and fail lint-manifests.
+# account creation, init containers, sidecars, resource limits, and host
+# networking. A regression in any of these would render invalid Kubernetes
+# manifests and fail lint-manifests.
 
 secrets:
   - name: 'apiKey'
@@ -48,3 +49,5 @@ deployment:
     - name: 'sidecar-example'
       image: 'busybox:1.36'
       command: ['sh', '-c', 'sleep infinity']
+  hostNetwork: true
+  dnsPolicy: 'ClusterFirstWithHostNet'
