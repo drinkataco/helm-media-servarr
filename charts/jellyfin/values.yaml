@@ -51,6 +51,10 @@ deployment:
 
   # runtimeClassName: "nvidia"
 
+  # For DLNA/SSDP device discovery, which needs the host network
+  # hostNetwork: true
+  # dnsPolicy: 'ClusterFirstWithHostNet'
+
   container:
     image:
       repository: 'jellyfin/jellyfin'
