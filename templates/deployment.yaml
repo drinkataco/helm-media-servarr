@@ -216,7 +216,7 @@ spec:
         - name: 'config-map-processed'
           emptyDir: {}
         {{- end }}
-      {{- with .Values.deployment.hostNetwork }}
+      {{- if .Values.deployment.hostNetwork }}
       hostNetwork: true
       {{- end }}
       {{- with .Values.deployment.dnsPolicy }}
