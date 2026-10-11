@@ -99,3 +99,5 @@ application:
         <ApiKey>$apiKey</ApiKey>
       </Config>
 ```
+
+Substitution is done with `sed`, so a secret value must be single-line — `&`, `/` and `\` are escaped for you, but an embedded newline will corrupt the rendered file. Charts that ship a `secrets` entry with an empty `value` expect you to supply one: set `value` inline or point `ref` at an existing Secret, or the pod will start without the key it needs.

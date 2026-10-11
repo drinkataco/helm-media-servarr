@@ -136,7 +136,7 @@ persistentVolumeClaims: {}
   # app-config:
   #   name: 'my-config-pvc' # optional, uses key name by default
   #   volumeName: 'existing-pv-name' # optional, binds this claim to a specific PV
-  #   accessMode: 'ReadWriteOnce'
+  #   accessMode: 'ReadWriteOnce' # a single mode, or a list: [ 'ReadWriteMany' ]
   #   requestStorage: '1Gi'
   #   storageClassName: 'manual'
   #   selector: {}
@@ -207,3 +207,6 @@ metrics:
     interval: '4m'
     scrapeTimeout: '90s'
     path: '/metrics'
+    # Extra labels on the ServiceMonitor. A kube-prometheus-stack that selects
+    # only its own release needs its release label here to scrape this.
+    labels: {}
