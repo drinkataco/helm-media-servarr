@@ -25,6 +25,9 @@ application:
   port: 11011
   # Access url base
   urlBase: 'cleanuparr'
+  # Both answer 200 once the app is serving. Relative to urlBase.
+  healthPath: '/health'
+  readyPath: '/health/ready'
   config: null
 
 #
@@ -41,27 +44,25 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
-
-    livenessProbe:
-      httpGet:
-        path: '/cleanuparr/health'
-        port: 'http'
-      initialDelaySeconds: 30
-    readinessProbe:
-      httpGet:
-        path: '/cleanuparr/health/ready'
-        port: 'http'
-      initialDelaySeconds: 15
+      - name: 'TZ'
+        value: 'UTC'
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
+      - name: 'downloads'
+        mountPath: '/downloads'
 
   volumes:
     config:
       persistentVolumeClaim:
         claimName: 'cleanuparr-config'
+    # Cleanuparr exists to remove failed and orphaned downloads, so it needs
+    # the same download directory as your download client. Replace this with
+    # that volume - an emptyDir gives it nothing to clean.
+    downloads:
+      emptyDir: {}
 
 persistentVolumeClaims:
   cleanuparr-config:
