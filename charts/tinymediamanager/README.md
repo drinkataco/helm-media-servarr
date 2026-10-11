@@ -115,7 +115,7 @@ ingress:
 
 Other supported deployment configuration include `deployment.nodeSelector`, `deployment.tolerations`, and `deployment.affinity`
 
-You can also adjust container ports, environment variables and define a `serviceAccount`.
+You can also adjust container ports, environment variables and define a `serviceAccount`. Note that tinyMediaManager reads `USER_ID`/`GROUP_ID` for the user it runs as — not the LSIO `PUID`/`PGID` the other charts in this collection use. Both are left unset by default so the image's own defaults own file ownership on the data volume; set them before first install rather than on an existing one.
 
 Have a look at the parent charts default `values.yaml` for a comprehensive list of available config.
 

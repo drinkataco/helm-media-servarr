@@ -38,6 +38,38 @@ deployment:
         servicePort: 7878
         protocol: 'TCP'
 
+    # tinyMediaManager reads USER_ID/GROUP_ID, not the LSIO PUID/PGID every
+    # sibling chart here uses. Both are left unset: the image's own defaults
+    # own file ownership on the data volume, and changing them on an existing
+    # install would orphan what is already there.
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+      # - name: 'USER_ID'
+      #   value: '1000'
+      # - name: 'GROUP_ID'
+      #   value: '1000'
+
+    # Probes target the UI on 4000 ('http'), not the 7878 'api' port that
+    # Radarr's and Sonarr's post-import hooks call. Unprefixed, because
+    # application.urlBase is empty for this chart.
+    livenessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 10
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'data'
@@ -51,8 +83,13 @@ deployment:
     data:
       persistentVolumeClaim:
         claimName: 'tinymediamanager-data'
+    # Your media libraries - the files tinyMediaManager scrapes metadata for.
+    # Replace these with the volumes that hold them; an emptyDir gives it
+    # nothing to manage.
     film:
+      emptyDir: {}
     television:
+      emptyDir: {}
 
 persistentVolumeClaims:
   tinymediamanager-data:
