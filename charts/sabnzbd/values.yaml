@@ -67,6 +67,35 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
+      - name: 'TZ'
+        value: 'UTC'
+
+    # Deliberately unprefixed: the sabnzbd.ini above sets no url_base, so
+    # SABnzbd serves at the root. application.urlBase only sets the ingress
+    # path here, not a path the app itself answers on.
+    #
+    # The query string is fine - kubelet parses it off the path. /api?mode=version
+    # needs no API key and answers 200 with the version.
+    #
+    # If you set host_whitelist in the ini, SABnzbd will 403 a request for any
+    # hostname outside it. Probes still pass: kubelet sends the pod IP, which
+    # SABnzbd permits. A probe with an explicit Host httpHeader would not.
+    livenessProbe:
+      httpGet:
+        path: '/api?mode=version'
+        port: 'http'
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      httpGet:
+        path: '/api?mode=version'
+        port: 'http'
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -79,7 +108,11 @@ deployment:
     config:
       persistentVolumeClaim:
         claimName: 'sabnzbd-config'
+    # Mounted at /config/Downloads to match the relative download_dir in the
+    # ini above. Replace this with the volume your library tools read from -
+    # an emptyDir loses every download on restart.
     downloads:
+      emptyDir: {}
 
 persistentVolumeClaims:
   sabnzbd-config:
