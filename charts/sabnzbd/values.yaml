@@ -91,7 +91,10 @@ ingress:
   enabled: true
 
 metrics:
-  enabled: true
+  # Off, to match every sibling chart. The exportarr sidecar needs the
+  # Prometheus Operator CRDs installed, and metrics.serviceMonitor may need
+  # labels before your Prometheus will select it.
+  enabled: false
   app: 'sabnzbd'
   port:
     number: 9707
