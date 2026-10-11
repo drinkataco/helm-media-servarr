@@ -38,7 +38,9 @@ service:
       name: 'http'
 
 ingress:
-  enabled: true
+  # FlareSolverr has no UI and is reached in-cluster by service name, so there
+  # is nothing to publish. Enable it only if you have a reason to.
+  enabled: false
 
 # metrics:
 # Metrics are enabled with environment variables in deployment.env
