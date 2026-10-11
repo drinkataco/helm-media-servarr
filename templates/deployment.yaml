@@ -64,7 +64,7 @@ spec:
                     {{- if $element.value }}
                   name: '{{ include "media-servarr-base.fullname" $context }}'
                     {{- else }}
-                  name: '{{ $element.ref }}'
+                  name: '{{ $element.ref | default (include "media-servarr-base.fullname" $context) }}'
                     {{- end }}
                   {{- end }}
                 {{- end }}

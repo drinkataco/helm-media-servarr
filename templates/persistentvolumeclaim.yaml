@@ -18,7 +18,11 @@ spec:
   storageClassName: '{{ $value.storageClassName }}'
   {{- end }}
   accessModes:
+    {{- if kindIs "slice" $value.accessMode }}
+    {{- toYaml $value.accessMode | nindent 4 }}
+    {{- else }}
     - '{{ $value.accessMode | default "ReadWriteOnce" }}'
+    {{- end }}
   resources:
     requests:
       storage: '{{ $value.requestStorage | default "1Gi" }}'
