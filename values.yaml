@@ -21,6 +21,12 @@ application:
   port:
   # base path of application
   urlBase: ''
+  # Path, relative to urlBase, that answers 2xx-3xx once the app is serving.
+  # Set it and the chart builds liveness and readiness probes for you, with the
+  # urlBase prefix applied. Leave it unset and no probe is rendered.
+  healthPath:
+  # Optional separate readiness path. Defaults to healthPath.
+  readyPath:
   # ConfigMap for core application settings
   config:
     # # Filename of configuration
@@ -62,6 +68,9 @@ deployment:
         servicePort: # By default uses application.port
         protocol: 'TCP'
 
+    # Set either probe to take full control. Anything here overrides the probe
+    # the chart would otherwise build from application.healthPath, so the
+    # urlBase prefix becomes yours to apply.
     livenessProbe:
       # httpGet:
       #   path: '/'

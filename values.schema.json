@@ -38,6 +38,14 @@
           "type": ["string", "null"],
           "description": "Base URL path the app is served under."
         },
+        "healthPath": {
+          "type": ["string", "null"],
+          "description": "Path, relative to urlBase, that answers 2xx-3xx once the app is serving. When set, the chart renders default liveness and readiness probes against it with the urlBase prefix applied. An explicit deployment.container.livenessProbe / readinessProbe overrides it."
+        },
+        "readyPath": {
+          "type": ["string", "null"],
+          "description": "Optional separate readiness path, relative to urlBase. Defaults to healthPath."
+        },
         "config": {
           "description": "ConfigMap-mounted configuration file(s). Accepts a single entry or a list.",
           "oneOf": [

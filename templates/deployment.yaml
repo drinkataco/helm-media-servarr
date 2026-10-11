@@ -124,10 +124,39 @@ spec:
                 protocol: '{{ .protocol }}'
                 containerPort: {{ .containerPort | default $context.Values.application.port }}
             {{- end }}
+          {{- $prefix := include "media-servarr-base.pathPrefix" . }}
+          {{/*
+          An explicit probe always wins. Otherwise fall back to a probe built
+          from application.healthPath, prefixed with urlBase. `if`/`else if`
+          rather than `with`/`else`: Go templates reject `{{ else if }}` inside
+          a `with`.
+          */}}
+          {{- if .Values.deployment.container.livenessProbe }}
           livenessProbe:
             {{- toYaml .Values.deployment.container.livenessProbe | nindent 12 }}
+          {{- else if .Values.application.healthPath }}
+          livenessProbe:
+            httpGet:
+              path: '{{ $prefix }}{{ .Values.application.healthPath }}'
+              port: 'http'
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          {{- end }}
+          {{- if .Values.deployment.container.readinessProbe }}
           readinessProbe:
             {{- toYaml .Values.deployment.container.readinessProbe | nindent 12 }}
+          {{- else if (.Values.application.readyPath | default .Values.application.healthPath) }}
+          readinessProbe:
+            httpGet:
+              path: '{{ $prefix }}{{ .Values.application.readyPath | default .Values.application.healthPath }}'
+              port: 'http'
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          {{- end }}
           volumeMounts:
             {{- toYaml .Values.deployment.container.volumeMounts | nindent 12 }}
             {{- if $config }}

@@ -66,6 +66,18 @@ default
 {{- end }}
 
 {{/*
+urlBase rendered as a path prefix: empty at the root, '/radarr' otherwise.
+Probe and ingress paths need the prefix to follow application.urlBase, and a
+values file is never run through the templating engine, so it cannot be
+composed there.
+*/}}
+{{- define "media-servarr-base.pathPrefix" -}}
+{{- with .Values.application.urlBase | default "" | trim | trimAll "/" -}}
+/{{ . }}
+{{- end -}}
+{{- end }}
+
+{{/*
 Merge global, default, values, and custom values
 */}}
 {{- define "media-servarr-base.prepareValues" -}}

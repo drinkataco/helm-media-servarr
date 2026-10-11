@@ -74,7 +74,7 @@ helm upgrade sonarr media-servarr/sonarr -f my-values.yaml
 
 ## Configuration
 
-The `media-servarr-base` library gives every chart the same building blocks: secret injection (inline or by reference), config-as-code via a ConfigMap-mounted config file, declarative PersistentVolumeClaims (including binding to a pre-existing PV via `volumeName`), ingress with optional TLS, an optional [Exportarr](https://github.com/onedr0p/exportarr) metrics sidecar for the *arr apps, and the usual pod-scheduling knobs.
+The `media-servarr-base` library gives every chart the same building blocks: secret injection (inline or by reference), config-as-code via a ConfigMap-mounted config file, declarative PersistentVolumeClaims (including binding to a pre-existing PV via `volumeName`), ingress with optional TLS, health probes derived from a single path, an optional [Exportarr](https://github.com/onedr0p/exportarr) metrics sidecar for the *arr apps, and the usual pod-scheduling knobs.
 
 For the full list of value keys, their types, and inline documentation:
 
@@ -99,3 +99,17 @@ application:
         <ApiKey>$apiKey</ApiKey>
       </Config>
 ```
+
+### Health probes
+
+Probes are built from one value rather than restated per chart. `application.healthPath` is relative to `application.urlBase`, and the chart applies the prefix for you:
+
+```yaml
+application:
+  urlBase: 'radarr'
+  healthPath: '/ping'       # probes hit /radarr/ping
+  # readyPath: '/ping'      # optional; defaults to healthPath
+```
+
+Set `deployment.container.livenessProbe` or `readinessProbe` to take full control of either one — an explicit probe always wins, and the `urlBase` prefix then becomes yours to apply. With neither `healthPath` nor an explicit probe, no probe is rendered.
+
