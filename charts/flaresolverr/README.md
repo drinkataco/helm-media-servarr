@@ -11,7 +11,6 @@ This README covers the basics of customising and installation
 * [Configuration](#configuration)
   * [Access](#access)
   * [Usage](#usage)
-  * [Ingress](#ingress)
   * [Metrics](#metrics)
   * [Advanced](#advanced)
 * [Upgrading](#upgrading)
@@ -46,20 +45,6 @@ By default, the application can be accessed over port `8191`.
 This application is useful alongside [prowlarr](../prowlarr), allowing you to access certain torrent providers that are protected behind cloudflare. See [this guide](https://trash-guides.info/Prowlarr/prowlarr-setup-flaresolverr/) for information how to set this up.
 
 By default, the internal URL will be `http://flaresolverr.{namespace}.svc.cluster.local:8191`
-
-### Ingress
-
-Flaresolverr is typically consumed in-cluster (by Prowlarr etc.) rather than externally, but ingress is enabled by default. Override host and TLS as needed:
-
-```yaml
-ingress:
-  enabled: true
-  host: 'example.com'
-  tls:
-    # Your TLS settings...
-```
-
-Disable ingress entirely with `ingress.enabled: false` if you only need in-cluster access.
 
 ### Metrics
 
