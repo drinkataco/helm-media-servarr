@@ -107,9 +107,13 @@ application:
 
 ### Volumes
 
-A volume is included just for configuration:
+Three volumes are included:
 
 - **config** - General config data, where the sqlite database exists, for example
+- **film** - Mounted at `/film`, to match [Radarr](../radarr/)'s default
+- **television** - Mounted at `/tv`, to match [Sonarr](../sonarr/)'s default
+
+Bazarr writes sidecar subtitle files next to the media, so it needs the same libraries Radarr and Sonarr report. `film` and `television` default to an `emptyDir`, which only keeps the pod from failing to start — point them at your media volumes:
 
 ```yaml
 deployment:
@@ -118,6 +122,12 @@ deployment:
     config: # The key will be the volume name
       persistentVolumeClaim:
         claimName: 'bazarr-config'
+    film:
+      persistentVolumeClaim:
+        claimName: 'media-film'
+    television:
+      persistentVolumeClaim:
+        claimName: 'media-television'
 ```
 
 By default, a PersistentVolumeClaim will be provisioned for the `config` named `bazarr-config`.
