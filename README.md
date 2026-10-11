@@ -82,6 +82,8 @@ For the full list of value keys, their types, and inline documentation:
 - **JSON Schema** — [`values.schema.json`](./values.schema.json) validates every value path. Editors with the [YAML Language Server](https://github.com/redhat-developer/yaml-language-server) pick it up automatically via the modeline at the top of each `values.yaml`.
 - **Default values** — [`values.yaml`](./values.yaml) is the canonical reference for defaults and shape.
 
+Every chart inherits a modest `deployment.container.resources.requests` floor (`25m` CPU, `128Mi` memory) so pods are schedulable rather than BestEffort. There is no `limits` default — the right ceiling is per-cluster, a memory limit set too low OOM-kills, and an inherited limit cannot be unset from your own values, only overridden key by key. Set `requests` and `limits` per app to suit your nodes; a partial override deep-merges over the floor.
+
 A distinctive pattern used in these charts is the **config-as-code with secret substitution**: application config lives in `values.yaml`, gets rendered to a ConfigMap, and secrets are substituted at pod start, allowing use to use secrets and configmap without having to commit their values:
 
 ```yaml

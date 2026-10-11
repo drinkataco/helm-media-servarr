@@ -75,12 +75,16 @@ deployment:
       # initialDelaySeconds: 15
 
     resources:
-      # requests:
-      #   memory: "64Mi"
-      #   cpu: "250m"
+      # A floor, not a recommendation. Deliberately no limits default: a memory
+      # limit that is too low OOM-kills, the right number is per-cluster, and an
+      # inherited limit cannot be unset from a consumer's values - only
+      # overridden key by key.
+      requests:
+        cpu: '25m'
+        memory: '128Mi'
       # limits:
-      #   memory: "128Mi"
-      #   cpu: "500m"
+      #   memory: '512Mi'
+      #   cpu: '500m'
 
     securityContext: {}
       # capabilities:
