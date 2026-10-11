@@ -9,6 +9,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "media-servarr-base.labels" . | nindent 4 }}
+    {{- with .Values.metrics.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
