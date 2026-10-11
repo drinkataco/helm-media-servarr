@@ -78,6 +78,8 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
+      - name: 'TZ'
+        value: 'UTC'
 
     livenessProbe:
       httpGet:
@@ -94,11 +96,22 @@ deployment:
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
+      - name: 'film'
+        mountPath: '/film'
+      - name: 'television'
+        mountPath: '/tv'
 
   volumes:
     config:
       persistentVolumeClaim:
         claimName: 'bazarr-config'
+    # Bazarr writes sidecar subtitles next to the media, so it needs the same
+    # libraries Radarr and Sonarr report. Replace these with your media
+    # volumes - an emptyDir only keeps Bazarr from failing to start.
+    film:
+      emptyDir: {}
+    television:
+      emptyDir: {}
 
 persistentVolumeClaims:
   bazarr-config:
