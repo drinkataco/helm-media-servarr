@@ -41,6 +41,8 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
+      - name: 'TZ'
+        value: 'UTC'
 
     livenessProbe:
       httpGet:
@@ -57,11 +59,18 @@ deployment:
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
+      - name: 'downloads'
+        mountPath: '/downloads'
 
   volumes:
     config:
       persistentVolumeClaim:
         claimName: 'cleanuparr-config'
+    # Cleanuparr exists to remove failed and orphaned downloads, so it needs
+    # the same download directory as your download client. Replace this with
+    # that volume - an emptyDir gives it nothing to clean.
+    downloads:
+      emptyDir: {}
 
 persistentVolumeClaims:
   cleanuparr-config:
