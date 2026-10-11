@@ -95,11 +95,16 @@ deployment:
         server: 'fileserver.local'
         path: '/srv/media/ebooks/'
     film:
+      emptyDir: {}
     music:
+      emptyDir: {}
     television:
+      emptyDir: {}
 ```
 
-By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for ebooks, film, music, and television, unless otherwise specified in your `values.yaml`
+By default, a PersistentVolumeClaim will be provisioned for the `config`, and `emptyDir: {}` is used for ebooks, film, music, and television unless otherwise specified in your `values.yaml`.
+
+Give each volume a body — a bare `film:` with nothing under it is dropped by Helm before the template runs, while its mount survives, and the API server then rejects the Deployment with `volumeMounts[2].name: Not found: "film"`. Write `emptyDir: {}` if you mean an empty directory.
 
 ```yaml
 persistentVolumeClaims:
@@ -151,7 +156,7 @@ Setting `dnsPolicy` matters here: with `hostNetwork: true` and Kubernetes' defau
 
 Other supported deployment configuration include `deployment.nodeSelector`, `deployment.tolerations`, and `deployment.affinity`
 
-You can also adjust container ports, environment variables (such as adding `PGID` and `PUID`) and define a `serviceAccount`.
+You can also adjust container ports, environment variables and define a `serviceAccount`. Note that `PUID`/`PGID` are honoured by the `lscr.io/linuxserver/jellyfin` image only — this chart defaults to `jellyfin/jellyfin`, which ignores them. Use `deployment.podSecurityContext.fsGroup` for volume ownership instead.
 
 Have a look at the parent charts default `values.yaml` for a comprehensive list of available config.
 

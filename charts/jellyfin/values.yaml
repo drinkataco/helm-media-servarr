@@ -59,12 +59,41 @@ deployment:
     image:
       repository: 'jellyfin/jellyfin'
 
-    # For Nvidia transcoding support
-    # env:
-    #   - name: 'NVIDIA_VISIBLE_DEVICES'
-    #     value: 'all'
-    #   - name: 'NVIDIA_DRIVER_CAPABILITIES'
-    #     value: 'all'
+    # PUID/PGID are honoured by lscr.io/linuxserver/jellyfin only, not by the
+    # jellyfin/jellyfin image this chart defaults to. Use
+    # deployment.podSecurityContext.fsGroup for volume ownership instead.
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+      # For Nvidia transcoding support
+      # - name: 'NVIDIA_VISIBLE_DEVICES'
+      #   value: 'all'
+      # - name: 'NVIDIA_DRIVER_CAPABILITIES'
+      #   value: 'all'
+
+    # Path matches <BaseUrl>jellyfin</BaseUrl> in network.xml above - change
+    # both together, along with application.urlBase.
+    #
+    # Jellyfin scans its library on first start, which outlasts an ordinary
+    # readiness window, so both probes are deliberately slack: liveness
+    # tolerates ~5 minutes before restarting, readiness ~5 minutes before
+    # giving up. Raise them further for a large library on slow storage.
+    livenessProbe:
+      httpGet:
+        path: '/jellyfin/health'
+        port: 'http'
+      initialDelaySeconds: 120
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 10
+    readinessProbe:
+      httpGet:
+        path: '/jellyfin/health'
+        port: 'http'
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -83,10 +112,16 @@ deployment:
     config:
       persistentVolumeClaim:
         claimName: 'jellyfin-config'
+    # Your media libraries. Replace these with the volumes that hold them - an
+    # emptyDir only keeps Jellyfin from failing to start.
     ebooks:
+      emptyDir: {}
     film:
+      emptyDir: {}
     music:
+      emptyDir: {}
     television:
+      emptyDir: {}
 
 persistentVolumeClaims:
   jellyfin-config:
