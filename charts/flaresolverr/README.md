@@ -41,6 +41,8 @@ It is recommend you read the application documentation regarding [environment va
 
 By default, the application can be accessed over port `8191`.
 
+FlareSolverr serves at the root and has no base-path support, so the chart's liveness and readiness probes hit `/health` directly. `application.urlBase` here only sets the ingress path — it is not a path the application itself answers on.
+
 ### Usage
 
 This application is useful alongside [prowlarr](../prowlarr), allowing you to access certain torrent providers that are protected behind cloudflare. See [this guide](https://trash-guides.info/Prowlarr/prowlarr-setup-flaresolverr/) for information how to set this up.
@@ -67,13 +69,15 @@ Flaresolverr exposes Prometheus metrics natively (not via Exportarr). Enable it 
 
 ```yaml
 deployment:
-  ...
-  env:
-    - name: 'PROMETHEUS_ENABLED'
-      value: '1'
-    - name: 'PROMETHEUS_PORT'
-      value: '9702'
+  container:
+    env:
+      - name: 'PROMETHEUS_ENABLED'
+        value: '1'
+      - name: 'PROMETHEUS_PORT'
+        value: '9702'
 ```
+
+Note that `env` is a list, so it is replaced wholesale rather than merged — include the chart's default `TZ` entry if you still want it.
 
 Metrics are then available on port `9702` (or whatever `PROMETHEUS_PORT` you set). To have Prometheus scrape them, install the [kube-prometheus](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) chart first and add a `ServiceMonitor` for this Service.
 
@@ -81,7 +85,7 @@ Metrics are then available on port `9702` (or whatever `PROMETHEUS_PORT` you set
 
 Other supported deployment configuration include `deployment.nodeSelector`, `deployment.tolerations`, and `deployment.affinity`
 
-You can also adjust container ports, environment variables (such as adding `PGID` and `PUID`) and define a `serviceAccount`.
+You can also adjust container ports, environment variables and define a `serviceAccount`. Note that FlareSolverr runs as a fixed internal user and ignores `PUID`/`PGID`, unlike every other chart in this collection.
 
 Have a look at the parent charts default `values.yaml` for a comprehensive list of available config.
 
