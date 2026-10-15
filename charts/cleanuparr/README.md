@@ -63,9 +63,12 @@ Application configuration is managed via the GUI and stored in the application d
 
 ### Volumes
 
-A volume is included just for configuration:
+Two volumes are included:
 
 - **config** - General config data, where the sqlite database exists, for example
+- **downloads** - Mounted at `/downloads`, the directory Cleanuparr prunes
+
+Cleanuparr removes failed and orphaned downloads, so `downloads` needs to be the same volume your download client writes to. It defaults to an `emptyDir`, which gives Cleanuparr nothing to clean — point it at that volume:
 
 ```yaml
 deployment:
@@ -74,6 +77,9 @@ deployment:
     config: # The key will be the volume name
       persistentVolumeClaim:
         claimName: 'cleanuparr-config'
+    downloads:
+      persistentVolumeClaim:
+        claimName: 'media-downloads'
 ```
 
 By default, a PersistentVolumeClaim will be provisioned for the `config` named `cleanuparr-config`.
