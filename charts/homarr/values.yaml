@@ -4,11 +4,28 @@ nameOverride: ''
 fullnameOverride: ''
 
 #
+# Secrets to create
+#
+# Homarr is configured by environment variable rather than a config file, so
+# unlike the arr charts the base chart cannot auto-inject these - a matching
+# valueFrom.secretKeyRef entry in deployment.container.env below is also
+# needed. See the commented SECRET_ENCRYPTION_KEY example there.
+secrets: []
+  # # Required. Homarr will not start without this. 64 hex characters, from
+  # # `openssl rand -hex 32`. No default is shipped on purpose: a shipped key
+  # # would be shared by every deployment that forgot to change it.
+  # - name: 'SECRET_ENCRYPTION_KEY'
+  #   value: ''
+  #   # ref: 'my-existing-secret' # alternatively point at an existing K8s Secret
+
+#
 # Application Config
 #
 application:
   # Main application web UI port
   port: 7575
+  # Homarr serves at the root; it has no base path setting.
+  urlBase: ''
 
 #
 # Resource - DEPLOYMENT
@@ -18,6 +35,43 @@ deployment:
   container:
     image:
       repository: 'ghcr.io/homarr-labs/homarr'
+
+    # Homarr is not an LSIO image and does not honour PUID/PGID.
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+      # # Required: Homarr will not start without SECRET_ENCRYPTION_KEY, and
+      # # serves HTTP 500 on every path - including /api/health - until it is
+      # # set. 64 hex characters, from `openssl rand -hex 32`. Changing it
+      # # invalidates everything already encrypted, so generate it once and
+      # # keep it.
+      # #
+      # # Homarr is configured by environment variable rather than a config
+      # # file, so the base chart cannot auto-inject it: add a matching entry
+      # # under `secrets:` and reference it here. `name` must be the Secret the
+      # # chart creates - `<release-name>-homarr`, or your `fullnameOverride`.
+      # - name: 'SECRET_ENCRYPTION_KEY'
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: 'release-name-homarr'
+      #       key: 'SECRET_ENCRYPTION_KEY'
+
+    livenessProbe:
+      httpGet:
+        path: '/api/health'
+        port: 'http'
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      httpGet:
+        path: '/api/health'
+        port: 'http'
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -29,10 +83,13 @@ deployment:
         mountPath: '/app/data/icons'
 
   volumes:
-    # Dashboard files
+    # Dashboard files. An emptyDir is lost on restart - give this a claim if
+    # you want dashboards edited in the UI to survive.
     app-data-configs:
+      emptyDir: {}
     # Icons
     app-data-icons:
+      emptyDir: {}
     # DB files
     data:
       persistentVolumeClaim:
