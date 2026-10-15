@@ -78,6 +78,29 @@ deployment:
       #       name: 'release-name-profilarr'
       #       key: 'OIDC_CLIENT_SECRET'
 
+    # Profilarr has no health endpoint - /health, /ping, /api/health and
+    # /api/status all 404. '/' returns a 302, which an httpGet probe counts as
+    # success, so it is the only usable HTTP check. Swap in a tcpSocket probe
+    # if a redirect reads as too weak a signal.
+    #
+    # Unprefixed, because Profilarr does not support urlBase.
+    livenessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
