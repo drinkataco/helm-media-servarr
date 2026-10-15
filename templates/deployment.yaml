@@ -124,10 +124,14 @@ spec:
                 protocol: '{{ .protocol }}'
                 containerPort: {{ .containerPort | default $context.Values.application.port }}
             {{- end }}
+          {{- with .Values.deployment.container.livenessProbe }}
           livenessProbe:
-            {{- toYaml .Values.deployment.container.livenessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.deployment.container.readinessProbe }}
           readinessProbe:
-            {{- toYaml .Values.deployment.container.readinessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- toYaml .Values.deployment.container.volumeMounts | nindent 12 }}
             {{- if $config }}
