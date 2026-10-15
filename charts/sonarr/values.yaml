@@ -57,6 +57,27 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
+      - name: 'TZ'
+        value: 'UTC'
+
+    # Path matches <UrlBase>sonarr</UrlBase> in config.xml above - change both
+    # together, along with application.urlBase.
+    livenessProbe:
+      httpGet:
+        path: '/sonarr/ping'
+        port: 'http'
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      httpGet:
+        path: '/sonarr/ping'
+        port: 'http'
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -71,8 +92,13 @@ deployment:
     config:
       persistentVolumeClaim:
         claimName: 'sonarr-config'
+    # Your download client's directory and media library. Replace these with
+    # the volumes that hold them - an emptyDir only keeps the app from
+    # failing to start.
     downloads:
+      emptyDir: {}
     tv:
+      emptyDir: {}
 
 persistentVolumeClaims:
   sonarr-config:
