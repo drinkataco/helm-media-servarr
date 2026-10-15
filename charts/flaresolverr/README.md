@@ -49,7 +49,7 @@ By default, the internal URL will be `http://flaresolverr.{namespace}.svc.cluste
 
 ### Ingress
 
-Flaresolverr is typically consumed in-cluster (by Prowlarr etc.) rather than externally, but ingress is enabled by default. Override host and TLS as needed:
+Flaresolverr is consumed in-cluster (by Prowlarr etc.) rather than externally and has no UI of its own, so ingress is **disabled by default** — unlike the other charts here. Enable it, and override host and TLS, only if you have a reason to reach it from outside the cluster:
 
 ```yaml
 ingress:
@@ -58,8 +58,6 @@ ingress:
   tls:
     # Your TLS settings...
 ```
-
-Disable ingress entirely with `ingress.enabled: false` if you only need in-cluster access.
 
 ### Metrics
 
