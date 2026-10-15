@@ -143,7 +143,7 @@
         "properties": {
           "name": { "type": "string", "description": "Override the PVC name. Defaults to the map key." },
           "volumeName": { "type": "string", "description": "Bind this PVC to a specific pre-existing PV by name." },
-          "accessMode": { "type": "string", "description": "Single access mode string (singular). The chart wraps it into `accessModes` in the rendered PVC." },
+          "accessMode": { "type": ["string", "array"], "items": { "type": "string" }, "description": "Access mode for the claim. A single string, or a list for claims that need more than one (e.g. ReadWriteMany). Rendered into `accessModes`." },
           "requestStorage": { "type": ["string", "integer"], "description": "Requested storage size, e.g. '1Gi'." },
           "storageClassName": { "type": "string" },
           "selector": { "type": ["object", "null"] }
@@ -271,7 +271,8 @@
           "properties": {
             "interval": { "type": "string" },
             "scrapeTimeout": { "type": "string" },
-            "path": { "type": "string" }
+            "path": { "type": "string" },
+            "labels": { "type": ["object", "null"], "description": "Extra labels on the ServiceMonitor, for Prometheus instances that select on one." }
           }
         }
       }
