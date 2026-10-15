@@ -105,7 +105,7 @@ application:
         "upload-slots-per-torrent": 14,
         "utp-enabled": false,
         "watch-dir": "/watch",
-        "watch-dir-enabled": true
+        "watch-dir-enabled": false
       }
     # # Secrets to inject - if any - to the config. In the config they must be defined as $secret
     # secrets: [ 'rpcPassword' ]
@@ -126,6 +126,8 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
+      - name: 'TZ'
+        value: 'UTC'
 
     ports:
       - name: 'http'
@@ -138,16 +140,28 @@ deployment:
         containerPort: 51413
         protocol: 'UDP'
 
+    # Path matches "rpc-url": "/transmission/" in settings.json above - change
+    # both together, along with application.urlBase. '/' also passes, but only
+    # via a 301 to here, which an httpGet probe happens to accept.
+    #
+    # failureThresholds are high: Transmission rechecks its torrents on
+    # startup and is slow to answer while it does.
     livenessProbe:
       httpGet:
-        path: '/'
+        path: '/transmission/web/'
         port: 'http'
       initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 10
     readinessProbe:
       httpGet:
-        path: '/'
+        path: '/transmission/web/'
         port: 'http'
       initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -160,7 +174,11 @@ deployment:
     config:
       persistentVolumeClaim:
         claimName: 'transmission-config'
+    # Where completed and incomplete downloads land, per download-dir and
+    # incomplete-dir in settings.json above. Replace this with the volume your
+    # library tools read from - an emptyDir loses every download on restart.
     downloads:
+      emptyDir: {}
 
 persistentVolumeClaims:
   transmission-config:
