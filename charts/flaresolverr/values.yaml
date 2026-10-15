@@ -24,11 +24,35 @@ deployment:
       repository: 'ghcr.io/flaresolverr/flaresolverr'
 
     # @see https://github.com/FlareSolverr/FlareSolverr?tab=readme-ov-file#environment-variables
+    # FlareSolverr runs as a fixed internal user and ignores PUID/PGID, unlike
+    # every sibling chart here.
     env:
+      - name: 'TZ'
+        value: 'UTC'
       # - name: 'PROMETHEUS_ENABLED'
       #   value: '1'
       # - name: 'PROMETHEUS_PORT'
       #   value: '9702'
+
+    # FlareSolverr serves at the root and has no base-path support, so these
+    # paths are not prefixed - application.urlBase below only sets the ingress
+    # path, not a path the app itself answers on.
+    livenessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
 
 service:
   type: 'ClusterIP'
