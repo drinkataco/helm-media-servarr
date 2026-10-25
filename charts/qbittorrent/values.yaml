@@ -1,0 +1,112 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Secrets to create
+#
+secrets:
+  - name: 'privatekey'
+    value: ''
+  - name: 'address'
+    value: ''
+  - name: 'publickey'
+    value: ''
+  - name: 'presharedkey'
+    value: ''
+  - name: 'endpoint'
+    value: ''
+  - name: 'dns'
+    value: ''
+
+#
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 8080
+  # Access url base
+  urlBase: 'qbittorrent'
+  # ConfigMap for core application settings
+  config:
+    # Filename of configuration
+    filename: 'wg0.conf'
+    # Configuration file contents
+    contents: |
+      [Interface]
+      PrivateKey = $privatekey
+      Address = $address
+      DNS = $dns
+
+
+      [Peer]
+      PublicKey = $publickey
+      PresharedKey = $presharedkey
+      AllowedIPs = 0.0.0.0/0
+      PersistentKeepalive = 0
+      Endpoint = $endpoint
+    # Secrets to inject - if any - to the config. In the config they must be defined as $secret
+    secrets:
+      - 'privatekey'
+      - 'address'
+      - 'publickey'
+      - 'presharedkey'
+      - 'endpoint'
+      - 'dns'
+    # Path the file will be mounted to in the config
+    mountPath: '/config/wireguard/wg0.conf'
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'tenseiken/qbittorrent-wireguard'
+
+    securityContext:
+      privileged: true
+      capabilities:
+        add:
+        - NET_ADMIN
+
+    env:
+      - name: 'QBT_LEGAL_NOTICE'
+        value: 'confirm' # Do not change!
+      - name: 'LAN_NETWORK'
+        value: '10.42.0.0/16'
+      - name: 'PGID'
+        value: '1000'
+      - name: 'PUID'
+        value: '1000'
+      - name: 'WEBUI_URL'
+        value: 'http://media-servarr.local/qbittorrent'
+      - name: 'WEBUI_APIKEY'
+        value: ''
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+      - name: 'downloads'
+        mountPath: '/downloads'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'qbittorrent-config'
+    downloads:
+
+  podSecurityContext:
+    sysctls:
+      - name: net.ipv4.conf.all.src_valid_mark
+        value: "1"
+      - name: net.ipv6.conf.all.disable_ipv6
+        value: "1"
+
+ingress:
+  enabled: true
+
+metrics:
+  enabled: false #no metrics collection
