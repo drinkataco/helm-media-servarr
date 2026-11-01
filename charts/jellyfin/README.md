@@ -135,6 +135,18 @@ Read more about this functionality in the [official documentation](https://jelly
 
 If your cluster supports GPUs, you can use `runtimeClassName` to ensure you are using the correct runtime class, be sure `nodeSelector` to control app placement. You should review the [official documentation](https://jellyfin.org/docs/general/post-install/transcoding/hardware-acceleration/) to understand how the official docker image supports hardware acceleration for your hardware type, and review the docs for enabling hardware passthrough on your kubernetes cluster.
 
+### DLNA and Device Discovery
+
+Jellyfin advertises its DLNA server over SSDP multicast, which does not cross the pod network boundary. If you want DLNA clients to discover the server automatically, run the pod on the host network:
+
+```yaml
+deployment:
+  hostNetwork: true
+  dnsPolicy: 'ClusterFirstWithHostNet'
+```
+
+Setting `dnsPolicy` matters here: with `hostNetwork: true` and Kubernetes' default `ClusterFirst` policy the pod inherits the node's resolver and loses in-cluster DNS. Note that host networking also binds the application port directly on the node, so only one such pod can be scheduled per node. See the [official documentation](https://jellyfin.org/docs/general/networking/dlna/) for the DLNA settings themselves.
+
 ### Advanced
 
 Other supported deployment configuration include `deployment.nodeSelector`, `deployment.tolerations`, and `deployment.affinity`

@@ -128,6 +128,10 @@ deployment:
   # Must already exist in cluster.
   priorityClassName:
 
+  hostNetwork: false
+
+  dnsPolicy:
+
 persistentVolumeClaims: {}
   # app-config:
   #   name: 'my-config-pvc' # optional, uses key name by default

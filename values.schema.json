@@ -129,7 +129,9 @@
         "tolerations": { "type": ["array", "null"] },
         "affinity": { "type": ["object", "null"] },
         "runtimeClassName": { "type": ["string", "null"] },
-        "priorityClassName": { "type": ["string", "null"] }
+        "priorityClassName": { "type": ["string", "null"] },
+        "hostNetwork": { "type": ["boolean", "null"] },
+        "dnsPolicy": { "type": ["string", "null"], "enum": ["ClusterFirst", "ClusterFirstWithHostNet", "Default", "None", null] }
       }
     },
 
