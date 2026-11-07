@@ -22,24 +22,35 @@ deployment:
     env:
       - name: 'TZ'
         value: 'UTC'
+      # Required. Homarr will not start without it. The Secret is not created
+      # by this chart; create it before installing:
+      #   kubectl create secret generic homarr-encryption-key \
+      #     --from-literal=secretEncryptionKey="$(openssl rand -hex 32)"
+      # Changing the key makes everything already encrypted unreadable.
+      - name: 'SECRET_ENCRYPTION_KEY'
+        valueFrom:
+          secretKeyRef:
+            name: 'homarr-encryption-key'
+            key: 'secretEncryptionKey'
+
+    livenessProbe:
+      httpGet:
+        path: '/api/health/live'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/api/health/ready'
+        port: 'http'
+      initialDelaySeconds: 15
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
-      - name: 'app-data-configs'
-        mountPath: '/app/data/configs'
       - name: 'data'
-        mountPath: '/data'
-      - name: 'app-data-icons'
-        mountPath: '/app/data/icons'
+        mountPath: '/appdata'
 
   volumes:
-    # Dashboard files
-    app-data-configs:
-      emptyDir: {}
-    # Icons
-    app-data-icons:
-      emptyDir: {}
-    # DB files
+    # Database, Redis dump and trusted certificates
     data:
       persistentVolumeClaim:
         claimName: 'homarr-data'
