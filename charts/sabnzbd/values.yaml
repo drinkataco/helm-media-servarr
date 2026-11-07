@@ -94,7 +94,7 @@ ingress:
   enabled: true
 
 metrics:
-  enabled: true
+  enabled: false
   app: 'sabnzbd'
   port:
     number: 9707
