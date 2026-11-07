@@ -59,12 +59,14 @@ deployment:
     image:
       repository: 'jellyfin/jellyfin'
 
-    # For Nvidia transcoding support
-    # env:
-    #   - name: 'NVIDIA_VISIBLE_DEVICES'
-    #     value: 'all'
-    #   - name: 'NVIDIA_DRIVER_CAPABILITIES'
-    #     value: 'all'
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+      # For Nvidia transcoding support
+      # - name: 'NVIDIA_VISIBLE_DEVICES'
+      #   value: 'all'
+      # - name: 'NVIDIA_DRIVER_CAPABILITIES'
+      #   value: 'all'
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:

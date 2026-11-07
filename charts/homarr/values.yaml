@@ -19,6 +19,10 @@ deployment:
     image:
       repository: 'ghcr.io/homarr-labs/homarr'
 
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'app-data-configs'

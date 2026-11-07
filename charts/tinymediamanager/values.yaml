@@ -38,6 +38,14 @@ deployment:
         servicePort: 7878
         protocol: 'TCP'
 
+    env:
+      - name: 'GROUP_ID'
+        value: '1000'
+      - name: 'TZ'
+        value: 'UTC'
+      - name: 'USER_ID'
+        value: '1000'
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'data'
