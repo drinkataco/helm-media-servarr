@@ -60,7 +60,9 @@ deployment:
       persistentVolumeClaim:
         claimName: 'tinymediamanager-data'
     film:
+      emptyDir: {}
     television:
+      emptyDir: {}
 
 persistentVolumeClaims:
   tinymediamanager-data:

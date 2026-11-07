@@ -74,7 +74,9 @@ deployment:
       persistentVolumeClaim:
         claimName: 'sonarr-config'
     downloads:
+      emptyDir: {}
     tv:
+      emptyDir: {}
 
 persistentVolumeClaims:
   sonarr-config:

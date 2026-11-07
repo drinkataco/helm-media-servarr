@@ -35,8 +35,10 @@ deployment:
   volumes:
     # Dashboard files
     app-data-configs:
+      emptyDir: {}
     # Icons
     app-data-icons:
+      emptyDir: {}
     # DB files
     data:
       persistentVolumeClaim:

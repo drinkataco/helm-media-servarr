@@ -95,11 +95,16 @@ deployment:
         server: 'fileserver.local'
         path: '/srv/media/ebooks/'
     film:
+      emptyDir: {}
     music:
+      emptyDir: {}
     television:
+      emptyDir: {}
 ```
 
-By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for ebooks, film, music, and television, unless otherwise specified in your `values.yaml`
+By default, a PersistentVolumeClaim will be provisioned for the `config`, and `emptyDir: {}` is used for ebooks, film, music, and television unless otherwise specified in your `values.yaml`.
+
+Give each volume a body — Helm drops a key with no value, leaving its mount without a volume.
 
 ```yaml
 persistentVolumeClaims:
