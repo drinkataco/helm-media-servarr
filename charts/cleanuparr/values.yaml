@@ -59,11 +59,15 @@ deployment:
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
+      - name: 'downloads'
+        mountPath: '/downloads'
 
   volumes:
     config:
       persistentVolumeClaim:
         claimName: 'cleanuparr-config'
+    downloads:
+      emptyDir: {}
 
 persistentVolumeClaims:
   cleanuparr-config:

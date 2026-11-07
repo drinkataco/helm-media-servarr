@@ -96,11 +96,19 @@ deployment:
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
+      - name: 'film'
+        mountPath: '/film'
+      - name: 'television'
+        mountPath: '/tv'
 
   volumes:
     config:
       persistentVolumeClaim:
         claimName: 'bazarr-config'
+    film:
+      emptyDir: {}
+    television:
+      emptyDir: {}
 
 persistentVolumeClaims:
   bazarr-config:
