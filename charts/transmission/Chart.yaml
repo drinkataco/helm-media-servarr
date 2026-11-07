@@ -10,7 +10,7 @@ keywords:
   - 'usenet'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 0.21.0
+version: 0.21.1
 appVersion: 4.1.4
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/transmission/icon.png?raw=true'
 dependencies:
