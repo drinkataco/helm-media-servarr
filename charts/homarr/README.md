@@ -9,6 +9,7 @@ This README covers the basics of customising and installation
 <!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [Installation](#installation)
 * [Configuration](#configuration)
+  * [Secrets](#secrets)
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
   * [Ingress](#ingress)
@@ -33,6 +34,39 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 ## Configuration
 
 Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
+
+### Secrets
+
+Homarr **will not start** without `SECRET_ENCRYPTION_KEY`. Until it is set the container fails its instrumentation hook with `Error: Invalid environment variables` and serves HTTP 500 on every path — including `/api/health`.
+
+Generate one with `openssl rand -hex 32` (64 hex characters). Keep it: changing it invalidates everything Homarr has already encrypted.
+
+No default is shipped on purpose — a shipped key would be shared by every deployment that forgot to change it.
+
+Homarr is configured by environment variable rather than a config file, so the base chart cannot auto-inject the secret the way it does for the *arr charts. Two halves are needed — the `secrets` entry, and a matching reference in `env`:
+
+```yaml
+secrets:
+  - name: 'SECRET_ENCRYPTION_KEY'
+    value: 'your-64-hex-chars-here'
+    # ref: 'my-existing-secret'   # or point at an existing Secret
+
+deployment:
+  container:
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+      - name: 'SECRET_ENCRYPTION_KEY'
+        valueFrom:
+          secretKeyRef:
+            # the Secret this chart creates: <release-name>-homarr
+            name: 'homarr-homarr'
+            key: 'SECRET_ENCRYPTION_KEY'
+```
+
+`env` is a list, so it replaces the chart's default wholesale — carry the `TZ` entry across if you want it.
+
+Note that Homarr is not an LSIO image and does not honour `PUID`/`PGID`.
 
 ### Application Configuration
 

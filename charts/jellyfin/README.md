@@ -151,7 +151,7 @@ Setting `dnsPolicy` matters here: with `hostNetwork: true` and Kubernetes' defau
 
 Other supported deployment configuration include `deployment.nodeSelector`, `deployment.tolerations`, and `deployment.affinity`
 
-You can also adjust container ports, environment variables (such as adding `PGID` and `PUID`) and define a `serviceAccount`.
+You can also adjust container ports, environment variables and define a `serviceAccount`. Note that `PUID`/`PGID` are honoured by the `lscr.io/linuxserver/jellyfin` image only — this chart defaults to `jellyfin/jellyfin`, which ignores them. Use `deployment.podSecurityContext.fsGroup` for volume ownership instead.
 
 Have a look at the parent charts default `values.yaml` for a comprehensive list of available config.
 

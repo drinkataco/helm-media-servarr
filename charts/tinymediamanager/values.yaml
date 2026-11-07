@@ -38,6 +38,18 @@ deployment:
         servicePort: 7878
         protocol: 'TCP'
 
+    # tinyMediaManager reads USER_ID/GROUP_ID, not the LSIO PUID/PGID every
+    # sibling chart here uses. Both are left unset: the image's own defaults
+    # own file ownership on the data volume, and changing them on an existing
+    # install would orphan what is already there.
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+      # - name: 'USER_ID'
+      #   value: '1000'
+      # - name: 'GROUP_ID'
+      #   value: '1000'
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'data'
