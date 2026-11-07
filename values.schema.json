@@ -72,6 +72,16 @@
               },
               "required": ["repository"]
             },
+            "command": {
+              "type": ["array", "null"],
+              "items": { "type": "string" },
+              "description": "Overrides the image ENTRYPOINT. Empty keeps the image default."
+            },
+            "args": {
+              "type": ["array", "null"],
+              "items": { "type": "string" },
+              "description": "Overrides the image CMD. Empty keeps the image default."
+            },
             "env": {
               "type": ["array", "null"],
               "items": { "type": "object" }

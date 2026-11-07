@@ -55,6 +55,14 @@ deployment:
       tag: ''
       pullPolicy: 'IfNotPresent'
 
+    # Override the image's ENTRYPOINT (command) and CMD (args). Empty keeps the
+    # image defaults.
+    command: []
+      # - '/bin/sh'
+    args: []
+      # - '-c'
+      # - 'exec /app/start.sh'
+
     # This also sets up a corresponding service
     ports:
       - name: 'http'
