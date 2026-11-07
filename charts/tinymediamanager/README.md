@@ -12,7 +12,7 @@ This README covers the basics of customising and installation
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
   * [Ingress](#ingress)
-  * [Headless Usage](#headless-usage)
+  * [Headless Mode](#headless-mode)
   * [Advanced](#advanced)
 * [Upgrading](#upgrading)
 * [Uninstallation](#uninstallation)
@@ -114,9 +114,9 @@ ingress:
     # Your TLS settings...
 ```
 
-### Headless Usage
+### Headless Mode
 
-The web UI is a full desktop session over noVNC, but routine tasks can be run without it.
+The web UI is a full desktop session over noVNC, but tinyMediaManager can also be driven without it.
 
 **HTTP API** - enable it in *Settings > General > System > HTTP API* and set an API key. The chart already exposes it on the `api` port (`7878`), so it can be called from inside the cluster, for example from a CronJob:
 
@@ -128,6 +128,10 @@ curl -X POST http://tinymediamanager:7878/api/movie \
 ```
 
 Use `/api/tvshow` for TV shows. See the [HTTP API docs](https://www.tinymediamanager.org/docs/http-api) for the available actions.
+
+**API server** - for automated runs, tinyMediaManager can be started with `--start-api`. This starts the HTTP API server (which must still be enabled in the settings) and keeps tinyMediaManager running until it is sent the `shutdown` action. See [Automated one-shot tasks](https://www.tinymediamanager.org/docs/http-api) for the full flow.
+
+The image's entrypoint still starts the desktop session, so passing the flag alone does not reduce the footprint. Replacing the entrypoint with `deployment.container.command` to run tinyMediaManager without X/noVNC is untested, and it may not start without a display.
 
 **Command line** - the `tinyMediaManager` binary accepts `movie` and `tvshow` commands, which can be run in the pod:
 
