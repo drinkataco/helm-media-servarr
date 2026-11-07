@@ -11,13 +11,14 @@ fullnameOverride: ''
 # deployment.container.env below is also needed. See the commented
 # PROFILARR_API_KEY example there.
 secrets: []
-  # # PROFILARR_API_KEY must be at least 32 characters. When set it overrides
-  # # the stored database key without being persisted to SQLite. Optional.
+  # # PROFILARR_API_KEY must be at least 32 characters. It always has full
+  # # access, works alongside keys created in Settings > Security, and is not
+  # # persisted to SQLite. Optional.
   # - name: 'PROFILARR_API_KEY'
   #   value: 'replace-with-a-random-string-of-at-least-32-chars'
   #   # ref: 'my-existing-secret' # alternatively point at an existing K8s Secret
   #
-  # # OIDC client secret. Required when AUTH=oidc. Keep this out of values.yaml
+  # # OIDC client secret. Required for SSO. Keep this out of values.yaml
   # # in production and use `ref` to point at a pre-existing Secret.
   # - name: 'OIDC_CLIENT_SECRET'
   #   value: ''
@@ -48,7 +49,8 @@ deployment:
         value: '1000'
       - name: 'TZ'
         value: 'UTC'
-      # Set AUTH to 'off' or 'oidc' to use a different authentication mode.
+      # Set AUTH to 'off' to disable login. SSO is enabled by setting the OIDC
+      # vars below alongside AUTH=on ('oidc' is a deprecated alias for 'on').
       # Consult the Profilarr docs for the required configuration when not using the default.
       - name: 'AUTH'
         value: 'on'
@@ -65,8 +67,9 @@ deployment:
       #       name: 'release-name-profilarr'
       #       key: 'PROFILARR_API_KEY'
       #
-      # # OIDC authentication. Set AUTH=oidc above, provide the three vars
-      # # below, and ensure ORIGIN is set. Profilarr expects the redirect URL
+      # # OIDC authentication. Keep AUTH=on above, provide all three vars
+      # # below, and ensure ORIGIN is set. Password and SSO login can be used
+      # # together. Profilarr expects the redirect URL
       # # at {ORIGIN}/auth/oidc/callback — most IdPs infer this automatically.
       # - name: 'OIDC_CLIENT_ID'
       #   value: 'your-client-id'
@@ -78,6 +81,17 @@ deployment:
       #       name: 'release-name-profilarr'
       #       key: 'OIDC_CLIENT_SECRET'
 
+    livenessProbe:
+      httpGet:
+        path: '/auth/login'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/auth/login'
+        port: 'http'
+      initialDelaySeconds: 15
+
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
@@ -88,7 +102,7 @@ deployment:
   # # by default (shared Pod network), so no extra env vars are needed.
   # sideCarContainers:
   #   - name: 'parser'
-  #     image: 'ghcr.io/dictionarry-hub/profilarr-parser:v2.0.9'
+  #     image: 'ghcr.io/dictionarry-hub/profilarr-parser:2.3.1'
   #     ports:
   #       - containerPort: 5000
   #         name: 'parser'
