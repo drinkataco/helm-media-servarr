@@ -57,6 +57,8 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
+      - name: 'TZ'
+        value: 'UTC'
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:

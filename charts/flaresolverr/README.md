@@ -67,12 +67,12 @@ Flaresolverr exposes Prometheus metrics natively (not via Exportarr). Enable it 
 
 ```yaml
 deployment:
-  ...
-  env:
-    - name: 'PROMETHEUS_ENABLED'
-      value: '1'
-    - name: 'PROMETHEUS_PORT'
-      value: '9702'
+  container:
+    env:
+      - name: 'PROMETHEUS_ENABLED'
+        value: '1'
+      - name: 'PROMETHEUS_PORT'
+        value: '9702'
 ```
 
 Metrics are then available on port `9702` (or whatever `PROMETHEUS_PORT` you set). To have Prometheus scrape them, install the [kube-prometheus](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) chart first and add a `ServiceMonitor` for this Service.

@@ -25,6 +25,8 @@ deployment:
 
     # @see https://github.com/FlareSolverr/FlareSolverr?tab=readme-ov-file#environment-variables
     env:
+      - name: 'TZ'
+        value: 'UTC'
       # - name: 'PROMETHEUS_ENABLED'
       #   value: '1'
       # - name: 'PROMETHEUS_PORT'
