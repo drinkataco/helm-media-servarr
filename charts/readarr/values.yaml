@@ -74,7 +74,9 @@ deployment:
       persistentVolumeClaim:
         claimName: 'readarr-config'
     downloads:
+      emptyDir: {}
     ebooks:
+      emptyDir: {}
 
 persistentVolumeClaims:
   readarr-config:

@@ -82,6 +82,7 @@ deployment:
       persistentVolumeClaim:
         claimName: 'sabnzbd-config'
     downloads:
+      emptyDir: {}
 
 persistentVolumeClaims:
   sabnzbd-config:

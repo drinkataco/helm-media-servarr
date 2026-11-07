@@ -163,6 +163,7 @@ deployment:
       persistentVolumeClaim:
         claimName: 'transmission-config'
     downloads:
+      emptyDir: {}
 
 persistentVolumeClaims:
   transmission-config:
