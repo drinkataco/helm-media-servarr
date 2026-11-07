@@ -118,6 +118,14 @@ spec:
           {{- end }}
           image: '{{ .Values.deployment.container.image.repository }}:{{ .Values.deployment.container.image.tag | default .Chart.AppVersion }}'
           imagePullPolicy: '{{ .Values.deployment.container.image.pullPolicy }}'
+          {{- with .Values.deployment.container.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.deployment.container.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             {{- range .Values.deployment.container.ports }}
               - name: '{{ .name }}'

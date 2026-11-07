@@ -1,7 +1,7 @@
 # Exercises the optional feature branches of the base chart's templates:
 # metrics/ServiceMonitor, ingress with TLS, an external-secret ref, service
-# account creation, init containers, sidecars, resource limits, and host
-# networking. A regression in any of these would render invalid Kubernetes
+# account creation, init containers, sidecars, main container command/args,
+# resource limits, and host networking. A regression in any of these would render invalid Kubernetes
 # manifests and fail lint-manifests.
 
 secrets:
@@ -31,6 +31,8 @@ deployment:
   podSecurityContext:
     fsGroup: 2000
   container:
+    command: ['/init']
+    args: ['--example']
     resources:
       requests:
         cpu: '250m'
