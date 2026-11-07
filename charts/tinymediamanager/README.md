@@ -12,6 +12,7 @@ This README covers the basics of customising and installation
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
   * [Ingress](#ingress)
+  * [Headless Usage](#headless-usage)
   * [Advanced](#advanced)
 * [Upgrading](#upgrading)
 * [Uninstallation](#uninstallation)
@@ -64,8 +65,10 @@ application:
 Three volumes are available by default:
 
 - **data** - tinyMediaManager application data, logs, cache, and backups
-- **film** - Location of movies
-- **television** - Location of TV shows
+- **film** - Location of movies, mounted at `/media/film`
+- **television** - Location of TV shows, mounted at `/media/tv`
+
+tinyMediaManager refuses to add a folder at the root of the container filesystem (such as `/film`) as a data source, so media is mounted under `/media`.
 
 ```yaml
 deployment:
@@ -110,6 +113,29 @@ ingress:
   tls:
     # Your TLS settings...
 ```
+
+### Headless Usage
+
+The web UI is a full desktop session over noVNC, but routine tasks can be run without it.
+
+**HTTP API** - enable it in *Settings > General > System > HTTP API* and set an API key. The chart already exposes it on the `api` port (`7878`), so it can be called from inside the cluster, for example from a CronJob:
+
+```bash
+curl -X POST http://tinymediamanager:7878/api/movie \
+  -H 'Content-Type: application/json' \
+  -H 'api-key: <your-api-key>' \
+  -d '[{"action":"update","scope":{"name":"all"}},{"action":"scrape","scope":{"name":"new"}}]'
+```
+
+Use `/api/tvshow` for TV shows. See the [HTTP API docs](https://www.tinymediamanager.org/docs/http-api) for the available actions.
+
+**Command line** - the `tinyMediaManager` binary accepts `movie` and `tvshow` commands, which can be run in the pod:
+
+```bash
+kubectl exec deploy/tinymediamanager -- /app/tinyMediaManager movie -u -n -r
+```
+
+See the [command line docs](https://www.tinymediamanager.org/docs/commandline) for all flags.
 
 ### Advanced
 
