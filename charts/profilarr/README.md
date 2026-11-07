@@ -53,17 +53,18 @@ deployment:
 
 ### Authentication
 
-Profilarr v2 supports three auth modes via the `AUTH` env var:
+Profilarr v2 supports two auth modes via the `AUTH` env var:
 
-- `on` (default) — password auth managed inside Profilarr.
+- `on` (default) — login required, using password auth managed inside Profilarr and/or OpenID Connect SSO.
 - `off` — no auth. Only use on trusted networks or behind a proxy that authenticates for you.
-- `oidc` — OpenID Connect via an external identity provider.
 
-For OIDC, set `AUTH=oidc`, provide the three OIDC vars, and set `ORIGIN` to your public URL. Profilarr expects the redirect URL at `{ORIGIN}/auth/oidc/callback` — most IdPs infer this automatically.
+`AUTH=oidc` is a deprecated alias for `on` as of Profilarr 2.3.0.
+
+To enable SSO, keep `AUTH=on`, provide all three OIDC vars (`OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_DISCOVERY_URL`), and set `ORIGIN` to your public URL. Password and SSO login can be used together. Profilarr expects the redirect URL at `{ORIGIN}/auth/oidc/callback` — most IdPs infer this automatically.
 
 Because `OIDC_CLIENT_SECRET` is sensitive, define it in the chart's `secrets:` block (or point at an existing Kubernetes Secret via `ref`) and bind it in `deployment.container.env` with `valueFrom.secretKeyRef`. Commented examples for both are in the chart's default `values.yaml`.
 
-You can also set `PROFILARR_API_KEY` (min 32 characters) the same way — when set it overrides the stored database key for `X-Api-Key` auth without being persisted to SQLite.
+You can also set `PROFILARR_API_KEY` (min 32 characters) the same way. It is used for `X-Api-Key` auth, always has full access, works alongside any keys created in Settings > Security, and is not persisted to SQLite.
 
 ### Volumes
 
@@ -117,7 +118,7 @@ To enable, run the parser as a sidecar in the same Pod, listening on port `5000`
 deployment:
   sideCarContainers:
     - name: 'parser'
-      image: 'ghcr.io/dictionarry-hub/profilarr-parser:v2.0.9'
+      image: 'ghcr.io/dictionarry-hub/profilarr-parser:2.3.1'
       ports:
         - containerPort: 5000
           name: 'parser'
