@@ -129,9 +129,28 @@ curl -X POST http://tinymediamanager:7878/api/movie \
 
 Use `/api/tvshow` for TV shows. See the [HTTP API docs](https://www.tinymediamanager.org/docs/http-api) for the available actions.
 
-**API server** - for automated runs, tinyMediaManager can be started with `--start-api`. This starts the HTTP API server (which must still be enabled in the settings) and keeps tinyMediaManager running until it is sent the `shutdown` action. See [Automated one-shot tasks](https://www.tinymediamanager.org/docs/http-api) for the full flow.
+**Without the UI** - started with `--start-api`, tinyMediaManager runs headless and is controlled only through the HTTP API, without the desktop session (X, VNC, noVNC) the image starts by default:
 
-The image's entrypoint still starts the desktop session, so passing the flag alone does not reduce the footprint. Replacing the entrypoint with `deployment.container.command` to run tinyMediaManager without X/noVNC is untested, and it may not start without a display.
+```yaml
+deployment:
+  container:
+    command:
+      - '/app/tinyMediaManager'
+      - '-Dtmm.contentfolder=/data'
+      - '--start-api'
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+
+ingress:
+  enabled: false
+```
+
+- Enable the HTTP API and set its key in the UI first, as there's no UI to change settings in once headless.
+- `command` replaces the image's entrypoint, which is also what applies `USER_ID` and `GROUP_ID`, so `securityContext` sets the same IDs to keep the ownership of files on the data volume.
+- Nothing is served on the `http` port, so the ingress is disabled.
+
+Remove these overrides to bring the UI back. See [Automated one-shot tasks](https://www.tinymediamanager.org/docs/http-api) for more on `--start-api`.
 
 **Command line** - the `tinyMediaManager` binary accepts `movie` and `tvshow` commands, which can be run in the pod:
 
