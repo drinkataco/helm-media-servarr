@@ -20,7 +20,16 @@ This README covers the basics of customising and installation
 
 ## Installation
 
-Install this helm chart using the following command:
+Homarr requires a `SECRET_ENCRYPTION_KEY` of 64 hex characters, read from a Secret this chart does not create. Create it first, in the release's namespace:
+
+```bash
+kubectl create secret generic homarr-encryption-key \
+  --from-literal=secretEncryptionKey="$(openssl rand -hex 32)"
+```
+
+Keep the key safe: changing it makes the integration credentials already stored in Homarr unreadable.
+
+Then install this helm chart using the following command:
 
 ```bash
 helm repo add media-servarr https://media-servarr.shw.al/charts
@@ -45,33 +54,20 @@ application:
 
 ### Volumes
 
-Three volumes are available by default:
+One volume is available by default:
 
-- **app-data-configs** - Dashboard files
-- **data** - Homarr data
-- **app-data-icons** - Icons
+- **data** - Homarr data (`/appdata`): the SQLite database, Redis dump and trusted certificates
 
 ```yaml
 deployment:
   ...
   volumes:
-    # Dashboard (config) files
-    app-data-configs:
-      persistentVolumeClaim:
-        claimName: 'my-pv-claim1'
-    # Dashboard Icons
-    app-data-icons:
-      # Example direct NFS mount without need for PV
-      nfs:
-        server: 'fileserver'
-        path: '/srv/homarr/icons'
-    # DB files — a PVC is provisioned by default (see below)
     data:
       persistentVolumeClaim:
-        claimName: 'homarr-data'
+        claimName: 'my-pv-claim'
 ```
 
-By default a PersistentVolumeClaim is provisioned for `data`; `emptyDir: {}` is used for the other two unless overridden in your `values.yaml`.
+By default a PersistentVolumeClaim is provisioned for `data`.
 
 ```yaml
 persistentVolumeClaims:
@@ -114,6 +110,15 @@ To upgrade the deployment:
 ```bash
 helm upgrade homarr media-servarr/homarr -f myvalues.yaml
 ```
+
+### 1.0.0
+
+Chart 1.0.0 moves to Homarr v2. Before upgrading:
+
+- Create the `homarr-encryption-key` Secret described in [Installation](#installation) if you have not already set `SECRET_ENCRYPTION_KEY` yourself.
+- The `data` volume is now mounted at `/appdata`, where Homarr keeps its database. Earlier chart versions mounted it at `/data`, so data was written to the container filesystem and not kept across restarts.
+- The `app-data-configs` and `app-data-icons` volumes have been removed; Homarr no longer reads those paths. Drop any overrides for them.
+- MySQL is no longer supported by Homarr v2. Convert to SQLite with Homarr's converter before upgrading.
 
 ## Uninstallation
 
