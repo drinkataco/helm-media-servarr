@@ -65,6 +65,17 @@ deployment:
       # - name: 'NVIDIA_DRIVER_CAPABILITIES'
       #   value: 'all'
 
+    livenessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 15
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'

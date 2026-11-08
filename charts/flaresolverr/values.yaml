@@ -30,6 +30,17 @@ deployment:
       # - name: 'PROMETHEUS_PORT'
       #   value: '9702'
 
+    livenessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 15
+
 service:
   type: 'ClusterIP'
   ports:

@@ -78,7 +78,7 @@ application:
         "rpc-password": "$rpcPassword",
         "rpc-port": 9091,
         "rpc-socket-mode": "0750",
-        "rpc-url": "/transmission/",
+        "rpc-url": "/",
         "rpc-username": "",
         "rpc-whitelist": "",
         "rpc-whitelist-enabled": false,

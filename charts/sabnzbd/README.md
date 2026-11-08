@@ -79,7 +79,6 @@ application:
       nzb_key = $nzbKey
       download_dir = Downloads/incomplete
       complete_dir = Downloads/complete
-      # url_base = /sabnzbd # Set a base url
       # [servers]
       # [[yournewsreader.example.org]]
       # name = yournewsreader.example.org
