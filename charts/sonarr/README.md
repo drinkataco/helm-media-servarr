@@ -30,7 +30,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install sonarr media-servarr/sonarr
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/sonarr/`
+Pointing the host `sonarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://sonarr.local/`
 
 ## Configuration
 
@@ -60,12 +60,10 @@ By default, base configuration is defined using a ConfigMap - defined by default
 ```yaml
 application:
   port: 8989 # default UI port
-  urlBase: 'sonarr' # default web base path
   config:
     contents: |
       <Config>
         ...
-        <UrlBase>sonarr</UrlBase>
         <ApiKey>$apiKey</ApiKey>
         <Port>8989</Port>
         ...

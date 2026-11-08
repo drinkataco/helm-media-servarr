@@ -29,7 +29,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install jellyfin media-servarr/jellyfin
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/jellyfin/`
+Pointing the host `jellyfin.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://jellyfin.local/`
 
 ## Configuration
 
@@ -44,7 +44,6 @@ Jellyfin has multiple config files which we can create ConfigMaps for. By defaul
 ```yaml
 application:
   port: 8096 # default UI port
-  urlBase: 'jellyfin' # default web base path
   config:
     - filename: 'network.xml'
       contents: |

@@ -9,8 +9,6 @@ fullnameOverride: ''
 application:
   # main application web ui port
   port: 8191
-  # access url base
-  urlBase: 'flaresolverr'
   # Config is managed with environment variables in deployment.env
   # @see https://github.com/FlareSolverr/FlareSolverr#environment-variables
 
@@ -32,6 +30,17 @@ deployment:
       # - name: 'PROMETHEUS_PORT'
       #   value: '9702'
 
+    livenessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 15
+
 service:
   type: 'ClusterIP'
   ports:
@@ -43,6 +52,7 @@ ingress:
   # FlareSolverr has no UI and is reached in-cluster by service name, so there
   # is nothing to publish. Enable it only if you have a reason to.
   enabled: false
+  host: 'flaresolverr.local'
 
 # metrics:
 # Metrics are enabled with environment variables in deployment.env

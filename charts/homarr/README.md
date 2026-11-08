@@ -37,7 +37,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install homarr media-servarr/homarr
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/homarr/`
+Pointing the host `homarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://homarr.local/`
 
 ## Configuration
 

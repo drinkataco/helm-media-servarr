@@ -9,8 +9,6 @@ fullnameOverride: ''
 application:
   # Main application web UI port
   port: 8096
-  # Access url base
-  urlBase: 'jellyfin'
   # ConfigMap for core application settings
   config:
     # Network Options
@@ -18,7 +16,6 @@ application:
       contents: |
         <?xml version="1.0" encoding="utf-8"?>
         <NetworkConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-          <BaseUrl>jellyfin</BaseUrl>
           <HttpServerPortNumber>8096</HttpServerPortNumber>
           <EnableHttps>false</EnableHttps>
           <PublicPort>8096</PublicPort>
@@ -68,6 +65,17 @@ deployment:
       # - name: 'NVIDIA_DRIVER_CAPABILITIES'
       #   value: 'all'
 
+    livenessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/health'
+        port: 'http'
+      initialDelaySeconds: 15
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
@@ -102,6 +110,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'jellyfin.local'
 
 # Metrics are enable within config - add <EnableMetrics>true</EnableMetrics> to /config/config/system.xml
 # metrics:

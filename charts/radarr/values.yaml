@@ -17,8 +17,6 @@ secrets:
 application:
   # main application web ui port
   port: 7878
-  # access url base
-  urlBase: 'radarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -29,7 +27,6 @@ application:
         <LogLevel>info</LogLevel>
         <EnableSsl>False</EnableSsl>
         <Port>7878</Port>
-        <UrlBase>radarr</UrlBase>
         <BindAddress>*</BindAddress>
         <ApiKey>$apiKey</ApiKey>
         <AnalyticsEnabled>False</AnalyticsEnabled>
@@ -60,6 +57,17 @@ deployment:
       - name: 'TZ'
         value: 'UTC'
 
+    livenessProbe:
+      httpGet:
+        path: '/ping'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/ping'
+        port: 'http'
+      initialDelaySeconds: 15
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
@@ -86,6 +94,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'radarr.local'
 
 metrics:
   enabled: false

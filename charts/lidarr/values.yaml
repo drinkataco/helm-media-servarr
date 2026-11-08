@@ -17,8 +17,6 @@ secrets:
 application:
   # Main application web UI port
   port: 8686
-  # Access url base
-  urlBase: 'lidarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -29,7 +27,6 @@ application:
         <LogLevel>info</LogLevel>
         <EnableSsl>False</EnableSsl>
         <Port>8686</Port>
-        <UrlBase>lidarr</UrlBase>
         <BindAddress>*</BindAddress>
         <ApiKey>$apiKey</ApiKey>
         <AnalyticsEnabled>False</AnalyticsEnabled>
@@ -60,6 +57,17 @@ deployment:
       - name: 'TZ'
         value: 'UTC'
 
+    livenessProbe:
+      httpGet:
+        path: '/ping'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/ping'
+        port: 'http'
+      initialDelaySeconds: 15
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
@@ -86,6 +94,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'lidarr.local'
 
 metrics:
   enabled: false

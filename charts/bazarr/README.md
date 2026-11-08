@@ -30,7 +30,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install bazarr media-servarr/bazarr
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/bazarr/`
+Pointing the host `bazarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://bazarr.local/`
 
 ## Configuration
 
@@ -70,24 +70,20 @@ The following example expects to have secrets set up for Radarr and Sonarr API k
 ```yaml
 application:
   port: 6767 # default UI port
-  urlBase: 'bazarr' # default web base path
   config:
     contents: |
       general:
         adaptive_searching: true
         auto_update: false
-        base_url: '/bazarr'
         port: 6767
         use_radarr: false
         use_sonarr: false
         radarr:
           apiKey: '$radarrApiKey'
-          base_url: '/radarr'
           ip: 'radarr.media-servarr.svc.cluster.local'
           port: 7878
         sonarr:
           apiKey: '$sonarrApiKey'
-          base_url: '/sonarr'
           ip: 'sonarr.media-servarr.svc.cluster.local'
           port: 8989
     # Secrets to inject the config they must be defined as $secret

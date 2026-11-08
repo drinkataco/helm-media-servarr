@@ -30,7 +30,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install prowlarr media-servarr/prowlarr
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/prowlarr/`
+Pointing the host `prowlarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://prowlarr.local/`
 
 ## Configuration
 
@@ -60,13 +60,11 @@ By default, base configuration is defined using a ConfigMap - defined by default
 ```yaml
 application:
   port: 9696 # default UI port
-  urlBase: 'prowlarr' # default web base path
   config:
     filename: 'config.xml'
     contents: |
       <Config>
         ...
-        <UrlBase>prowlarr</UrlBase>
         <ApiKey>$apiKey</ApiKey>
         <Port>9696</Port>
         ...
