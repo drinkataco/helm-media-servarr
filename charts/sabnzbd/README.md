@@ -30,7 +30,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install sabnzbd media-servarr/sabnzbd
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/sabnzbd/`
+Pointing the host `sabnzbd.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://sabnzbd.local/`
 
 ## Configuration
 
@@ -69,7 +69,6 @@ You can also add servers here, as shown under the `[servers]` block
 ```yaml
 application:
   port: 8080 # default UI port
-  urlBase: 'sabnzbd' # default web base path
   config:
     contents: |
       [misc]

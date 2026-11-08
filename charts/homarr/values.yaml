@@ -63,4 +63,5 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'homarr.local'
   path: '/'

@@ -30,7 +30,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install cleanuparr media-servarr/cleanuparr
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/cleanuparr/`
+Pointing the host `cleanuparr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://cleanuparr.local/`
 
 ## Configuration
 

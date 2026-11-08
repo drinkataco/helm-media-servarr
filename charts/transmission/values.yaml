@@ -17,8 +17,6 @@ secrets:
 application:
   # main application web ui port
   port: 9091
-  # access url base
-  urlBase: 'transmission'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -176,3 +174,4 @@ service:
 
 ingress:
   enabled: true
+  host: 'transmission.local'

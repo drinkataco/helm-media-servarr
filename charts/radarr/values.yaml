@@ -17,8 +17,6 @@ secrets:
 application:
   # main application web ui port
   port: 7878
-  # access url base
-  urlBase: 'radarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -29,7 +27,6 @@ application:
         <LogLevel>info</LogLevel>
         <EnableSsl>False</EnableSsl>
         <Port>7878</Port>
-        <UrlBase>radarr</UrlBase>
         <BindAddress>*</BindAddress>
         <ApiKey>$apiKey</ApiKey>
         <AnalyticsEnabled>False</AnalyticsEnabled>
@@ -86,6 +83,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'radarr.local'
 
 metrics:
   enabled: false

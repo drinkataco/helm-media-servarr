@@ -17,8 +17,6 @@ secrets:
 application:
   # Main application web UI port
   port: 8989
-  # Access url base
-  urlBase: 'sonarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -29,7 +27,6 @@ application:
           <LogLevel>info</LogLevel>
           <EnableSsl>False</EnableSsl>
           <Port>8989</Port>
-          <UrlBase>sonarr</UrlBase>
           <BindAddress>*</BindAddress>
           <ApiKey>$apiKey</ApiKey>
           <AnalyticsEnabled>False</AnalyticsEnabled>
@@ -86,6 +83,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'sonarr.local'
 
 metrics:
   enabled: false

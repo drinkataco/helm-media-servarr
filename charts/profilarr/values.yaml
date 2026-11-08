@@ -30,8 +30,6 @@ secrets: []
 application:
   # Main application web UI port
   port: 6868
-  # Profilarr does not support urlBase
-  urlBase: ''
 
 #
 # Resource - DEPLOYMENT

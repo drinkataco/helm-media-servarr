@@ -19,8 +19,6 @@ secrets:
 application:
   # main application web ui port
   port: 8080
-  # access url base
-  urlBase: 'sabnzbd'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -92,6 +90,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'sabnzbd.local'
 
 metrics:
   enabled: false

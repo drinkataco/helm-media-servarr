@@ -17,8 +17,6 @@ secrets:
 application:
   # Main application web UI port
   port: 9696
-  # Access url base
-  urlBase: 'prowlarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -29,7 +27,6 @@ application:
         <LogLevel>info</LogLevel>
         <EnableSsl>False</EnableSsl>
         <Port>9696</Port>
-        <UrlBase>prowlarr</UrlBase>
         <BindAddress>*</BindAddress>
         <ApiKey>$apiKey</ApiKey>
         <AnalyticsEnabled>False</AnalyticsEnabled>
@@ -78,6 +75,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'prowlarr.local'
 
 metrics:
   enabled: false
