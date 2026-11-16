@@ -19,8 +19,6 @@ secrets:
 application:
   # main application web ui port
   port: 8080
-  # access url base
-  urlBase: 'sabnzbd'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -70,6 +68,17 @@ deployment:
       - name: 'TZ'
         value: 'UTC'
 
+    livenessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 15
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
@@ -92,6 +101,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'sabnzbd.local'
 
 metrics:
   enabled: false

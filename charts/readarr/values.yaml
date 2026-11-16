@@ -17,8 +17,6 @@ secrets:
 application:
   # Main application web UI port
   port: 8787
-  # Access url base
-  urlBase: 'readarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -29,7 +27,6 @@ application:
         <LogLevel>info</LogLevel>
         <EnableSsl>False</EnableSsl>
         <Port>8787</Port>
-        <UrlBase>readarr</UrlBase>
         <BindAddress>*</BindAddress>
         <ApiKey>$apiKey</ApiKey>
         <AnalyticsEnabled>False</AnalyticsEnabled>
@@ -60,6 +57,17 @@ deployment:
       - name: 'TZ'
         value: 'UTC'
 
+    livenessProbe:
+      httpGet:
+        path: '/ping'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/ping'
+        port: 'http'
+      initialDelaySeconds: 15
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
@@ -86,6 +94,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'readarr.local'
 
 metrics:
   enabled: false

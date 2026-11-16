@@ -23,8 +23,6 @@ secrets:
 application:
   # Main application web UI port
   port: 6767
-  # Access url base
-  urlBase: 'bazarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -42,18 +40,15 @@ application:
       general:
         adaptive_searching: true
         auto_update: false
-        base_url: '/bazarr'
         port: 6767
         use_radarr: false
         use_sonarr: false
         # radarr:
         #   apiKey: '$radarrApiKey'
-        #   base_url: '/radarr'
         #   ip: 'radarr.media-servarr.svc.cluster.local'
         #   port: 7878
         # sonarr:
         #   apiKey: '$sonarrApiKey'
-        #   base_url: '/sonarr'
         #   ip: 'sonarr.media-servarr.svc.cluster.local'
         #   port: 8989
     # Secrets to inject the config they must be defined as $secret
@@ -83,12 +78,12 @@ deployment:
 
     livenessProbe:
       httpGet:
-        path: '/bazarr/system/status'
+        path: '/system/status'
         port: 'http'
       initialDelaySeconds: 30
     readinessProbe:
       httpGet:
-        path: '/bazarr/system/status'
+        path: '/system/status'
         port: 'http'
       initialDelaySeconds: 15
 
@@ -118,6 +113,7 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'bazarr.local'
 
 metrics:
   enabled: false

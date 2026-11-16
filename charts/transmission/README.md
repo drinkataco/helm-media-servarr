@@ -31,7 +31,7 @@ helm repo add media-servarr https://media-servarr.shw.al/charts
 helm install transmission media-servarr/transmission
 ```
 
-Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/transmission/`
+Pointing the host `transmission.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://transmission.local/`
 
 ## Configuration
 
@@ -61,7 +61,6 @@ By default, base configuration is defined using a ConfigMap - defined by default
 ```yaml
 application:
   port: 9091 # default UI port
-  urlBase: 'transmission' # default web base path
   config:
     filename: 'settings.json'
     contents: |

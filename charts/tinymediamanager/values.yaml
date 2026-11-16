@@ -9,8 +9,6 @@ fullnameOverride: ''
 application:
   # Main application web UI port
   port: 4000
-  # tinyMediaManager does not fit cleanly behind a shared path prefix, so default to root
-  urlBase: ''
   # ConfigMap for startup options
   config:
     filename: 'launcher-extra.yml'
@@ -46,6 +44,17 @@ deployment:
       - name: 'USER_ID'
         value: '1000'
 
+    livenessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 15
+
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'data'
@@ -72,3 +81,4 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
+  host: 'tinymediamanager.local'
