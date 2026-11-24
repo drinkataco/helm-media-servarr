@@ -1,0 +1,30 @@
+apiVersion: 'v2'
+name: 'qbittorrent'
+description: 'Torrent downloader option with built-in Wireguard connectivity'
+home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/qbittorrent'
+keywords:
+  - 'tv'
+  - 'television'
+  - 'series'
+  - 'torrent'
+  - 'bittorrent'
+  - 'usenet'
+  - 'manager'
+  - 'qbitorrent'
+kubeversion: ">=1.24.0-0"
+type: 'application'
+version: 0.1.0
+appVersion: 5.2.2
+icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/qbittorrent/icon.png?raw=true'
+dependencies:
+  - name: 'media-servarr-base'
+    version: 0.17.1
+    repository: "file://../.."
+maintainers:
+  - name: 'media-servarr'
+    email: 'git@jo.shw.al'
+    url: 'https://github.com/drinkataco/media-servarr/'
+sources:
+  - 'https://github.com/qbittorrent/qBittorrent'
+  - 'https://github.com/tenseiken/docker-qbittorrent-wireguard'
+  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/qbittorrent'
